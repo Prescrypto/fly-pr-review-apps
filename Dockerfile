@@ -1,4 +1,8 @@
-FROM alpine
+ARG ELIXIR_VERSION=1.15.4
+ARG OTP_VERSION=26.0.2
+ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-alpine-3.11.3"
+
+FROM ${BUILDER_IMAGE} as builder
 
 RUN apk add --no-cache curl jq dasel
 
