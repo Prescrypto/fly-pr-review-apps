@@ -20,7 +20,6 @@ EVENT_TYPE=$(jq -r .action /github/workflow/event.json)
 app="${INPUT_NAME:-pr-$PR_NUMBER-$REPO_NAME}"
 region="${INPUT_REGION:-${FLY_REGION:-iad}}"
 org="${INPUT_ORG:-${FLY_ORG:-personal}}"
-image="$INPUT_IMAGE"
 config="${INPUT_CONFIG:-fly.toml}"
 
 if ! echo "$app" | grep "$PR_NUMBER"; then
@@ -43,7 +42,7 @@ if ! flyctl status --app "$app"; then
   cp "$config" "$config.bak"
 
   # Deploy with modified config file
-  flyctl launch --no-deploy --copy-config --name "$app" --image "$image" --region "$region" --org "$org"
+  flyctl launch --no-deploy --copy-config --name "$app" --region "$region" --org "$org"
 
   # Restore the original config file
   cp "$config.bak" "$config"
@@ -70,7 +69,7 @@ fi
 
 # Trigger the deploy of the new version.
 echo "Contents of config $config file: " && cat "$config"
-flyctl deploy --config "$config" --app "$app" --region "$region" --image "$image" --strategy immediate
+flyctl deploy --config "$config" --app "$app" --region "$region" --strategy immediate
 
 # Make some info available to the GitHub workflow.
 flyctl status --app "$app" --json >status.json

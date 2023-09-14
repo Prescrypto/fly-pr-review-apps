@@ -10,8 +10,6 @@ runs:
 inputs:
   name:
     description: Fly app name
-  image:
-    description: Optional pre-existing Docker image to use
   config:
     description: Optional path to a custom Fly toml config. Config path should be relative to `path` parameter, if specified.
   region:
