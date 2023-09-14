@@ -69,7 +69,7 @@ fi
 
 # Trigger the deploy of the new version.
 echo "Contents of config $config file: " && cat "$config"
-flyctl deploy --remote-only --config "$config" --app "$app" --region "$region" --strategy immediate
+flyctl deploy --local-only --config "$config" --app "$app" --region "$region" --strategy immediate
 
 # Make some info available to the GitHub workflow.
 flyctl status --app "$app" --json >status.json
