@@ -16,7 +16,9 @@ If you have an existing `fly.toml` in your repo, this action will copy it with a
 | `org`      | Which Fly organization to launch the app under. Alternatively, set the env `FLY_ORG`. Defaults to `personal`.                                                                                            |
 | `path`     | Path to run the `flyctl` commands from. Useful if you have an existing `fly.toml` in a subdirectory.                                                                                                     |
 | `postgres` | Optional name of an existing Postgres cluster to `flyctl postgres attach` to.                                                                                                                            |
-| `update`   | Whether or not to update this Fly app when the PR is updated. Default `true`.                                                                                                                            |
+| `vm`       | Set app VM to a named size, eg. shared-cpu-1x, dedicated-cpu-1x, dedicated-cpu-2x etc. (defaults to shared-cpu-1x)                                                                                       |
+| `memory`   | Set app VM memory (defaults to 256 megabytes)                                                                                                                                                            |
+| `count`    | Set app VM count to the given value (defaults to 1)                                                                                                                                                      |
 
 ## Required Secrets
 
@@ -109,29 +111,4 @@ steps:
     uses: superfly/fly-pr-review-apps@1.0.0
     with:
       postgres: myapp-postgres-staging-apps
-```
-
-## Example with multiple Fly apps
-
-If you need to run multiple Fly apps per staging app, for example Redis, memcached, etc, just give each app a unique name. Your application code will need to be able to discover the app hostnames.
-
-Redis example:
-
-```yaml
-steps:
-  - uses: actions/checkout@v2
-
-  - name: Deploy redis
-    uses: superfly/fly-pr-review-apps@1.0.0
-    with:
-      update: false # Don't need to re-deploy redis when the PR is updated
-      path: redis # Keep fly.toml in a subdirectory to avoid confusing flyctl
-      image: flyio/redis:6.2.6
-      name: pr-${{ github.event.number }}-myapp-redis
-
-  - name: Deploy app
-    id: deploy
-    uses: superfly/fly-pr-review-apps@1.0.0
-    with:
-      name: pr-${{ github.event.number }}-myapp-app
 ```
