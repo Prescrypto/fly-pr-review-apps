@@ -42,7 +42,7 @@ if ! flyctl status --app "$app"; then
   cp "$config" "$config.bak"
 
   # Deploy with modified config file
-  flyctl launch --no-deploy --copy-config --name "$app" --region "$region" --org "$org"
+  flyctl launch --no-deploy --copy-config --name "$app" --region "$region" --org "$org" --ha=false
 
   # Restore the original config file
   cp "$config.bak" "$config"
