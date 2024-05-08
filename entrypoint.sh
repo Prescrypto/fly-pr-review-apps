@@ -42,7 +42,7 @@ if ! flyctl status --app "$app"; then
   cp "$config" "$config.bak"
 
   # Deploy with modified config file
-  flyctl launch --no-deploy --copy-config --name "$app" --regions "$region" --org "$org" --ha=false
+  flyctl launch --no-deploy --copy-config --name "$app" --region "$region" --org "$org" --ha=$INPUT_HA
 
   # Restore the original config file
   cp "$config.bak" "$config"
@@ -51,25 +51,18 @@ if [ -n "$INPUT_SECRETS" ]; then
   echo $INPUT_SECRETS | tr " " "\n" | flyctl secrets import --app "$app"
 fi
 
-# Scale the VM before the deploy.
-if [ -n "$INPUT_VM" ]; then
-  flyctl scale --app "$app" --config "$config" vm "$INPUT_VM"
-fi
-if [ -n "$INPUT_MEMORY" ]; then
-  flyctl scale --app "$app" --config "$config" memory "$INPUT_MEMORY"
-fi
-if [ -n "$INPUT_COUNT" ]; then
-  flyctl scale --app "$app" --config "$config" count "$INPUT_COUNT"
-fi
-
 # Attach postgres cluster to the app if specified.
 if [ -n "$INPUT_POSTGRES" ]; then
-  flyctl postgres attach $INPUT_POSTGRES --app "$app" --yes || true
+  flyctl postgres attach "$INPUT_POSTGRES" --app "$app" --yes || true
 fi
 
 # Trigger the deploy of the new version.
 echo "Contents of config $config file: " && cat "$config"
-flyctl deploy --local-only --config "$config" --app "$app" --regions "$region" --strategy immediate
+if [ -n "$INPUT_VMSIZE" ]; then
+  flyctl deploy --config "$config" --app "$app" --regions "$region" --strategy immediate --ha=$INPUT_HA --vm-size "$INPUT_VMSIZE"
+else
+  flyctl deploy --config "$config" --app "$app" --regions "$region" --strategy immediate --ha=$INPUT_HA --vm-cpu-kind "$INPUT_CPUKIND" --vm-cpus $INPUT_CPU --vm-memory "$INPUT_MEMORY"
+fi
 
 # Make some info available to the GitHub workflow.
 flyctl status --app "$app" --json >status.json
