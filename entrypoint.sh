@@ -42,7 +42,7 @@ if ! flyctl status --app "$app"; then
   cp "$config" "$config.bak"
 
   # Deploy with modified config file
-  flyctl launch --no-deploy --copy-config --name "$app" --region "$region" --org "$org" --ha=false
+  flyctl launch --no-deploy --copy-config --name "$app" --regions "$region" --org "$org" --ha=false
 
   # Restore the original config file
   cp "$config.bak" "$config"
@@ -69,7 +69,7 @@ fi
 
 # Trigger the deploy of the new version.
 echo "Contents of config $config file: " && cat "$config"
-flyctl deploy --local-only --config "$config" --app "$app" --region "$region" --strategy immediate
+flyctl deploy --local-only --config "$config" --app "$app" --regions "$region" --strategy immediate
 
 # Make some info available to the GitHub workflow.
 flyctl status --app "$app" --json >status.json
