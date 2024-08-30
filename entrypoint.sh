@@ -53,15 +53,15 @@ if ! flyctl status --app "$app"; then
 
   # 1. Create the app
   # https://fly.io/docs/flyctl/apps-create/
-  flyctl apps create --name "$app" --org "$org"
+  flyctl apps create --name "$app" --org "$org" --yes
 
   # 2. Allocate an IPv4 address
   # https://fly.io/docs/flyctl/ips-allocate-v4/
-  flyctl ips allocate-v4 --app "$app" --config "$config" --region "$region"
+  flyctl ips allocate-v4 --app "$app" --config "$config" --region "$region" --yes
 
   # 3. Allocate an IPv6 address
   # https://fly.io/docs/flyctl/ips-allocate-v6/
-  flyctl ips allocate-v6 --app "$app" --config "$config" --region "$region"
+  flyctl ips allocate-v6 --app "$app" --config "$config" --region "$region" --yes
 
   # Restore the original config file
   cp "$config.bak" "$config"
