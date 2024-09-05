@@ -53,7 +53,7 @@ if ! flyctl status --app "$app"; then
 
   # 1. Create the app
   # https://fly.io/docs/flyctl/apps-create/
-  flyctl apps create --name "$app" --org "$org" --yes
+  flyctl apps create "$app" --org "$org"
 
   # 2. Allocate an IPv4 address
   # https://fly.io/docs/flyctl/ips-allocate-v4/
