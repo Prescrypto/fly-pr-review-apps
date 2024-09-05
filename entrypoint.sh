@@ -57,11 +57,11 @@ if ! flyctl status --app "$app"; then
 
   # 2. Allocate an IPv4 address
   # https://fly.io/docs/flyctl/ips-allocate-v4/
-  flyctl ips allocate-v4 --app "$app" --config "$config" --region "$region" --yes
+  flyctl ips allocate-v4 --app "$app" --config "$config" --shared
 
   # 3. Allocate an IPv6 address
   # https://fly.io/docs/flyctl/ips-allocate-v6/
-  flyctl ips allocate-v6 --app "$app" --config "$config" --region "$region" --yes
+  flyctl ips allocate-v6 --app "$app" --config "$config"
 
   # Restore the original config file
   cp "$config.bak" "$config"
